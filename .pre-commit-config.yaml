@@ -13,3 +13,23 @@ repos:
     rev: v5.10.1
     hooks:
       - id: isort
+
+  - repo: local
+    hooks:
+      - id: ensure-lock-synced
+        name: Ensure poetry.lock is up to date
+        entry: bash
+        args:
+          - -c
+          - |
+            if git diff --quiet pyproject.toml poetry.lock; then
+              echo "✅ poetry.lock está sincronizado"
+              exit 0
+            else
+              echo "❌ poetry.lock está desatualizado em relação ao pyproject.toml"
+              echo "Execute: poetry lock"
+              exit 1
+            fi
+        language: system
+        types: [toml]
+
