@@ -10,21 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repository checkout
+      - name: Checkout do repositório
         uses: actions/checkout@v3
 
-      - name: Install render CLI
+      - name: Instalar o Render CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/renderinc/render-cli/main/install.sh | bash
-          export PATH="$HOME/.render/bin:$PATH"
+          curl -L https://github.com/render-oss/cli/releases/latest/download/render-linux-amd64 -o render
+          chmod +x render
+          sudo mv render /usr/local/bin/render
           render --version
 
-      - name: Render deploy
+      - name: Deploy para o Render
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          PATH: ${{ env.PATH }}:/home/runner/.render/bin
         run: |
-          render deploy \
-            --service-id ${{ secrets.RENDER_SERVICE_ID }} \
-            --branch main \
-            --yes
+          render deploys create ${{ secrets.RENDER_SERVICE_ID }} --output json --confirm
