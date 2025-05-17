@@ -13,11 +13,17 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v3
 
+      - name: Instalar o Homebrew
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential procps curl file git
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $GITHUB_ENV
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
       - name: Instalar o Render CLI
         run: |
-          curl -L https://github.com/render-oss/cli/releases/download/v2.1.4/cli_2.1.4_linux_amd64.tar.gz -o render.tar.gz
-          tar -xzf render.tar.gz
-          sudo mv render /usr/local/bin/
+          brew install render
           render --version
 
       - name: Deploy para o Render
