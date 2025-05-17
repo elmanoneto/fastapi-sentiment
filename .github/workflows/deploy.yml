@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Intsall Render CLI
+        run: |
+          curl -fsSL https://render.com/install.sh | bash
+          echo "$HOME/.render/bin" >> $GITHUB_PATH
+
+      - name: Render deploy
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          render deploy \
+            --service-id ${{ secrets.RENDER_SERVICE_ID }} \
+            --branch main \
+            --yes
