@@ -12,7 +12,7 @@ WORKDIR /app
 
 # Copia arquivos
 COPY pyproject.toml poetry.lock README.md ./
-RUN poetry install
+RUN poetry install --no-root
 
 COPY . .
 
