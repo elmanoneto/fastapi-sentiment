@@ -1,4 +1,4 @@
-name: Render deploy
+name: Deploy para Render
 
 on:
   push:
@@ -15,9 +15,9 @@ jobs:
 
       - name: Instalar o Render CLI
         run: |
-          curl -L https://github.com/render-oss/render-cli/releases/latest/download/render-linux-x86_64 -o render
-          chmod +x render
-          sudo mv render /usr/local/bin/render
+          curl -L https://github.com/render-oss/cli/releases/download/v2.1.4/cli_2.1.4_linux_amd64.tar.gz -o render.tar.gz
+          tar -xzf render.tar.gz
+          sudo mv render /usr/local/bin/
           render --version
 
       - name: Deploy para o Render
