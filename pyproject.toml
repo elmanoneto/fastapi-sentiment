@@ -17,5 +17,5 @@ dependencies = [
 description = "API para análise de sentimentos com FastAPI, VADER e tradução automática"
 name = "fastapi-sentiment"
 readme = "README.md"
-requires-python = "^3.13"
+requires-python = ">=3.9,<3.13"
 version = "0.1.0"
