@@ -13,16 +13,21 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v3
 
-      - name: Instalar o Homebrew
+      - name: Instalar dependências do Homebrew
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential procps curl file git
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $GITHUB_ENV
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-      - name: Instalar o Render CLI
+      - name: Instalar Homebrew
         run: |
+          NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - name: Adicionar Homebrew ao PATH
+        run: echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+
+      - name: Inicializar ambiente do Homebrew e instalar Render CLI
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           brew install render
           render --version
 
@@ -30,4 +35,5 @@ jobs:
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           render deploys create ${{ secrets.RENDER_SERVICE_ID }} --output json --confirm
