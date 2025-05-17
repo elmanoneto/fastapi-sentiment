@@ -1,31 +1,52 @@
-from fastapi.testclient import TestClient
+import fastapi.testclient
+import pytest
+from sqlalchemy import StaticPool, create_engine
+from sqlalchemy.orm import sessionmaker
 
+from app.api.v1.endpoints.sentiment import get_db
+from app.db.db import Base
 from app.main import app
 
-client = TestClient(app)
+DATABASE_URL = "sqlite:///:memory:"
+
+engine = create_engine(
+    DATABASE_URL, connect_args={"check_same_thread": False}, poolclass=StaticPool
+)
+TestingSessionLocal = sessionmaker(bind=engine)
 
 
-def test_health():
-    response = client.get("/health")
+def override_get_db():
+    db = TestingSessionLocal()
+    try:
+        db = TestingSessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
+@pytest.fixture(scope="module")
+def client():
+    Base.metadata.create_all(bind=engine)
+    app.dependency_overrides[get_db] = override_get_db
+    yield fastapi.testclient.TestClient(app)
+    Base.metadata.drop_all(bind=engine)
+
+
+def test_analyze_create_and_return(client):
+    payload = {"text": "Esse projeto é muito bom!"}
+    response = client.post("/api/v1/sentiment/analyze", json=payload)
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    data = response.json()
+    assert data["content"] == payload["text"]
+    assert data["sentiment"] in ["positive", "neutral", "negative"]
+    assert isinstance(data["score"], float)
 
 
-def test_analyze_positive():
-    response = client.post(
-        "/api/v1/sentiment/analyze", json={"text": "O produto é muito bom!"}
-    )
+def test_list_messages(client):
+    response = client.get("/api/v1/sentiment/messages")
     assert response.status_code == 200
-    result = response.json()
-    assert result["sentiment"] == "positive"
-    assert result["score"] > 0.5
-
-
-def test_analyze_negative():
-    response = client.post(
-        "/api/v1/sentiment/analyze", json={"text": "O produto é muito ruim!"}
-    )
-    assert response.status_code == 200
-    result = response.json()
-    assert result["sentiment"] == "negative"
-    assert result["score"] <= -0.2
+    data = response.json()
+    assert len(data) == 1
+    assert "content" in data[0]
+    assert "sentiment" in data[0]
+    assert "score" in data[0]

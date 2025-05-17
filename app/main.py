@@ -1,9 +1,6 @@
-from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from app.api.v1.routes import router as api_router
-
-load_dotenv()
 
 app = FastAPI(title="Sentiment Analysis API", version="1.0.0")
 
