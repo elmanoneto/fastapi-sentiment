@@ -35,3 +35,9 @@ max-line-length = 120
 
 [tool.pytest.ini_options]
 addopts = "--cov=app --cov-report=term-missing"
+
+[tool.poetry]
+authors = ["Elmano Neto <elmanoneto@gmail.com>"]
+description = "API de análise de sentimento com FastAPI"
+name = "fastapi-sentiment"
+version = "0.1.0"
