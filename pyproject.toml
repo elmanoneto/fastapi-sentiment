@@ -40,4 +40,5 @@ addopts = "--cov=app --cov-report=term-missing"
 authors = ["Elmano Neto <elmanoneto@gmail.com>"]
 description = "API de análise de sentimento com FastAPI"
 name = "fastapi-sentiment"
+package-mode = false
 version = "0.1.0"
