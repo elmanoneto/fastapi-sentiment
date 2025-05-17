@@ -13,14 +13,16 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
 
-      - name: Install Render CLI
+      - name: Install render CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/renderinc/render-cli/main/install.sh | bash
-          echo "$HOME/.render/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.render/bin:$PATH"
+          render --version
 
       - name: Render deploy
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          PATH: ${{ env.PATH }}:/home/runner/.render/bin
         run: |
           render deploy \
             --service-id ${{ secrets.RENDER_SERVICE_ID }} \
