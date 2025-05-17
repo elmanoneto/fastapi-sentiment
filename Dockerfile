@@ -11,8 +11,8 @@ ENV PATH="/root/.local/bin:$PATH"
 WORKDIR /app
 
 # Copia arquivos
-COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root
+COPY pyproject.toml ./
+RUN poetry install
 
 COPY . .
 
