@@ -1,9 +1,9 @@
 import os
 
-from db.migrate import apply_migrations
 from fastapi import FastAPI
 
 from app.api.v1.routes import router as api_router
+from app.db.migrate import apply_migrations
 
 app = FastAPI(title="Sentiment Analysis API", version="1.0.0")
 
