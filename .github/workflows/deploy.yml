@@ -13,9 +13,9 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v3
 
-      - name: Intsall Render CLI
+      - name: Install Render CLI
         run: |
-          curl -fsSL https://render.com/install.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/renderinc/render-cli/main/install.sh | bash
           echo "$HOME/.render/bin" >> $GITHUB_PATH
 
       - name: Render deploy
