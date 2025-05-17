@@ -1,6 +1,6 @@
 [tool.poetry]
 authors = ["Elmano Neto <elmanoneto@gmail.com>"]
-description = ""
+description = "API para análise de sentimentos com FastAPI, VADER e tradução automática."
 name = "fastapi-sentiment"
 package-mode = false
 readme = "README.md"
