@@ -22,7 +22,7 @@ jobs:
       - name: Poetry install
         uses: abatilo/actions-poetry@v2
         with:
-          poetry-version: 1.8.2
+          poetry-version: 2.1.1
 
       - name: Deps install
         run: poetry install
