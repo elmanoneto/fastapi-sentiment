@@ -40,12 +40,19 @@ def analyze_sentiment(request: SentimentalRequest, db: Session = Depends(get_db)
     sentiment, score = analyze_sentiment_service(translated)
     content = request.text
 
-    message = Message(content=content, sentiment=sentiment, score=score)
+    message = Message(
+        content=content,
+        sentiment=sentiment,
+        score_positive=score,
+        score_negative=1 - score,
+        language="pt",
+    )
+
     db.add(message)
     db.commit()
     db.refresh(message)
 
-    return SentimentalResponse(sentiment=sentiment, score=score, content=content)
+    return message
 
 
 @router.get("/messages", response_model=list[SentimentalResponse])
