@@ -5,7 +5,6 @@ from app.db.migrate import apply_migrations
 
 app = FastAPI(title="Sentiment Analysis API", version="1.0.0")
 
-
 apply_migrations()
 
 
