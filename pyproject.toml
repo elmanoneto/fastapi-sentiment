@@ -25,6 +25,7 @@ dependencies = [
 ]
 
 [tool.poetry.group.dev.dependencies]
+alembic = "^1.15.2"
 black = "^25.1.0"
 flake8 = "^7.2.0"
 httpx = "^0.28.1"
@@ -32,7 +33,6 @@ isort = "^6.0.1"
 pre-commit = "^4.2.0"
 pytest = "^8.3.5"
 pytest-cov = "^6.1.1"
-alembic = "^1.15.2"
 
 [tool.flake8]
 max-line-length = 120
@@ -46,3 +46,7 @@ description = "API de análise de sentimento com FastAPI"
 name = "fastapi-sentiment"
 package-mode = false
 version = "0.1.0"
+
+[tool.isort]
+profile = "black"
+skip = ["alembic/"]

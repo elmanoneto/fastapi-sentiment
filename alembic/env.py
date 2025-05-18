@@ -7,29 +7,28 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-# Garante que o caminho app/ seja encontrado
+# ✅ Garante que o Alembic enxergue o projeto
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# ✅ Carrega o .env corretamente antes de qualquer import de db
+# ✅ Carrega variáveis do .env antes de tudo
 load_dotenv()
 
-# Alembic config
+# ✅ Alembic config
 config = context.config
 fileConfig(config.config_file_name)
-
-# ✅ Define a URL do banco dinamicamente com base no .env
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
-# ✅ Agora é seguro importar o Base e os modelos
-from app.db.db import Base  # Base original usada nos modelos
-from app.models.models import Message  # noqa: F401
+from app import models  # noqa: F401 — força o carregamento de todos os modelos
 
-# Define o metadata para autogeração
+# ✅ Importa o Base original e modelos
+from app.db.db import Base
+
+# ✅ Só agora usa Base
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
-    """Rodar as migrações em modo offline (gera SQL em texto)."""
+    """Rodar as migrações em modo offline."""
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -37,22 +36,19 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 
 
 def run_migrations_online() -> None:
-    """Rodar as migrações em modo online (executa no banco)."""
+    """Rodar as migrações em modo online."""
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
-
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
-
         with context.begin_transaction():
             context.run_migrations()
 
