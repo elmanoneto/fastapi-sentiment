@@ -39,7 +39,8 @@ def test_analyze_create_and_return(client):
     data = response.json()
     assert data["content"] == payload["text"]
     assert data["sentiment"] in ["positive", "neutral", "negative"]
-    assert isinstance(data["score"], float)
+    assert isinstance(data["score_positive"], float)
+    assert isinstance(data["score_negative"], float)
 
 
 def test_list_messages(client):
@@ -49,4 +50,5 @@ def test_list_messages(client):
     assert len(data) == 1
     assert "content" in data[0]
     assert "sentiment" in data[0]
-    assert "score" in data[0]
+    assert "score_negative" in data[0]
+    assert "score_positive" in data[0]
