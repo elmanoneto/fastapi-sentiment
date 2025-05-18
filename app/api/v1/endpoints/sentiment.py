@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from deep_translator import GoogleTranslator
 from fastapi import APIRouter, Depends
 from langdetect import detect
@@ -20,6 +22,7 @@ class SentimentalResponse(BaseModel):
     score_negative: float
     content: str
     language: str
+    created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 

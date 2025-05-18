@@ -1,6 +1,7 @@
 import uuid
+from datetime import datetime, timezone
 
-from sqlalchemy import Column, Float, String
+from sqlalchemy import Column, DateTime, Float, String
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.db import Base
@@ -14,3 +15,4 @@ class Message(Base):
     score_positive = Column(Float, nullable=False)
     score_negative = Column(Float, nullable=False)
     language = Column(String, nullable=False, server_default="pt")
+    created_at = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
