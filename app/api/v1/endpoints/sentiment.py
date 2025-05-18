@@ -16,6 +16,7 @@ class SentimentalResponse(BaseModel):
     sentiment: str
     score: float
     content: str
+    language: str
 
     model_config = ConfigDict(from_attributes=True)
 
