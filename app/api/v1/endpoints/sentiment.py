@@ -1,5 +1,7 @@
 from deep_translator import GoogleTranslator
 from fastapi import APIRouter, Depends
+from langdetect import detect
+from langdetect.lang_detect_exception import LangDetectException
 from pydantic import BaseModel, ConfigDict
 from pytest import Session
 
@@ -36,6 +38,11 @@ def get_db():
 
 @router.post("/analyze", response_model=SentimentalResponse)
 def analyze_sentiment(request: SentimentalRequest, db: Session = Depends(get_db)):
+    try:
+        detected_language = detect(request.text)
+    except LangDetectException:
+        detected_language = "unknown"
+
     translated = GoogleTranslator(source="auto", target="en").translate(request.text)
     sentiment, score = analyze_sentiment_service(translated)
     content = request.text
@@ -45,7 +52,7 @@ def analyze_sentiment(request: SentimentalRequest, db: Session = Depends(get_db)
         sentiment=sentiment,
         score_positive=score,
         score_negative=1 - score,
-        language="pt",
+        language=detected_language,
     )
 
     db.add(message)
