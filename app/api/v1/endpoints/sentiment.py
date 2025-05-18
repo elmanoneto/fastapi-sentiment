@@ -14,7 +14,8 @@ class SentimentalRequest(BaseModel):
 
 class SentimentalResponse(BaseModel):
     sentiment: str
-    score: float
+    score_positive: float
+    score_negative: float
     content: str
     language: str
 
