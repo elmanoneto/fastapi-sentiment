@@ -12,3 +12,4 @@ class Message(Base):
     content = Column(String, nullable=False)
     sentiment = Column(String, nullable=False)
     score = Column(Float, nullable=False)
+    language = Column(String, nullable=False, server_default="pt")
