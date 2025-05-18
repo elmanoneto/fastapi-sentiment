@@ -6,21 +6,25 @@ from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from app.db.db import Base
-from app.models.models import Message  # noqa: F401
 
+# Garante que o caminho app/ seja encontrado
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# ✅ Carrega o .env corretamente antes de qualquer import de db
 load_dotenv()
 
-# Alembic Config
+# Alembic config
 config = context.config
 fileConfig(config.config_file_name)
 
-# Define a URL do banco a partir do .env
+# ✅ Define a URL do banco dinamicamente com base no .env
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
-# Define a metadata para autogeração de migrations
+# ✅ Agora é seguro importar o Base e os modelos
+from app.db.db import Base  # Base original usada nos modelos
+from app.models.models import Message  # noqa: F401
+
+# Define o metadata para autogeração
 target_metadata = Base.metadata
 
 
